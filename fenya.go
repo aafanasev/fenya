@@ -35,10 +35,13 @@ func Init(token, baseUrl string, debug bool) error {
 }
 
 func Handle(update *tgbotapi.Update) {
-	// TODO: filter NEW MEMBER update
-	const greetingStickerFileId = "CAADAgADQgADaJpdDJ7cv5VPztHoAg"
 
-	msg := tgbotapi.NewStickerShare(update.Message.Chat.ID, greetingStickerFileId)
+	if update.Message.NewChatMembers != nil {
+		// say hello
+		const greetingStickerId = "CAADAgADQgADaJpdDJ7cv5VPztHoAg"
+		msg := tgbotapi.NewStickerShare(update.Message.Chat.ID, greetingStickerId)
+		msg.ReplyToMessageID = update.Message.MessageID
+		bot.Send(msg)
+	}
 
-	bot.Send(msg)
 }
